@@ -10,46 +10,13 @@ Based on: http://ncase.me/trust/
 
 from agent import Agent
 from pandas import DataFrame
+import strategies as st
 
 NUM_OF_COPYCATS = 5
 NUM_OF_COOPERATORS = 5
 NUM_OF_CHEATERS = 5
 NUM_OF_GRUDGERS = 5
 NUM_OF_DETECTIVES = 5
-
-def copycat_strategy(previous_actions):
-    if len(previous_actions) == 0:
-        return 1
-    else:
-        return previous_actions[-1]
-
-def cooperator_strategy(previous_actions):
-    return 1
-
-def cheater_strategy(previous_actions):
-    return -1
-
-def grudger_strategy(previous_actions):
-    if -1 in previous_actions:
-        return -1
-    else:
-        return 1
-
-def detective_strategy(previous_actions):
-    num_of_previous_rounds = len(previous_actions)
-    if num_of_previous_rounds == 0:
-        return 1
-    elif num_of_previous_rounds == 1:
-        return -1
-    elif num_of_previous_rounds == 2:
-        return 1
-    elif num_of_previous_rounds == 3:
-        return 1
-    else:
-        if -1 in previous_actions:
-            return previous_actions[-1]
-        else:
-            return -1    
     
 def prisoners_dilemma(agents, num_of_rounds):
     both_cooperate = (2,2)
@@ -87,15 +54,15 @@ def prisoners_dilemma(agents, num_of_rounds):
             
 agents = list()
 for i in range(NUM_OF_COPYCATS):
-    agents.append(Agent('Copycat', i, copycat_strategy))
+    agents.append(Agent('Copycat', i, st.copycat_strategy))
 for i in range(NUM_OF_COOPERATORS):
-    agents.append(Agent('Cooperator', i, cooperator_strategy))
+    agents.append(Agent('Cooperator', i, st.cooperator_strategy))
 for i in range(NUM_OF_CHEATERS):
-    agents.append(Agent('Cheater', i, cheater_strategy))
+    agents.append(Agent('Cheater', i, st.cheater_strategy))
 for i in range(NUM_OF_GRUDGERS):
-    agents.append(Agent('Grudger', i, grudger_strategy))
+    agents.append(Agent('Grudger', i, st.grudger_strategy))
 for i in range(NUM_OF_DETECTIVES):
-    agents.append(Agent('Detective', i, detective_strategy))
+    agents.append(Agent('Detective', i, st.detective_strategy))
         
 prisoners_dilemma(agents,5)
 
@@ -104,4 +71,4 @@ for agent in agents:
     results_dict[agent.name] = agent.score_history
 print(results_dict)
 results_df = DataFrame(results_dict)
-print(results_df)
+print(results_df.iloc[-1,:])
